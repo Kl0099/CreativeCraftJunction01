@@ -9,7 +9,7 @@ const router = express.Router()
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: process.env.CALLBACKURL,
+  callbackURL: "http://localhost:5500/user/auth/google/callback",
   passReqToCallback: true
 },
   async function (req, accessToken, refreshToken, profile, done ) {
@@ -19,18 +19,10 @@ passport.use(new GoogleStrategy({
       const existingUser = await User.findOne({ email: profile.emails[0].value })
 
       if (existingUser) {
-        const token = existingUser.generateJWT()
-        await token.then((tokenValue) => {
-          //storing token in cookie storage
-          res.cookie('jwt', tokenValue, { 
-            httpOnly: true,
-            expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
-            maxAge: 7 * 24 * 60 * 60 * 1000
-          })
-        })
         return done(null, existingUser);
       }
       else {
+        req.flash("error", "Please SignUp first")
         return done(null, null)
       }
     } catch (err) {
