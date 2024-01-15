@@ -22,8 +22,6 @@ const Admin = require("./module/Admin")
 const LocalStrategy = require("passport-local")
 require("./auth")
 
-const log = console.log
-
 const sessionOption = {
     secret: 'keyboard cat',
     resave: false,
