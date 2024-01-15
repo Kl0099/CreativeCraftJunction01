@@ -83,7 +83,7 @@ router.get('/login/google',
 
 router.get('/auth/google/callback',
     passport.authenticate('google',
-        { failureRedirect: '/user/signUp' }
+        { failureRedirect: '/user/signUp', failureFlash: true }
     ),
     (req, res) => {
         req.flash("success", "You loggedIn SuccessFully")
