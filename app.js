@@ -1,6 +1,6 @@
 const express = require("express")
 const app = express()
-const PORT = 5500
+const PORT = process.env.PORT ||5500
 const path = require("path")
 const ejsMate = require("ejs-mate")
 const ExpressError = require("./utility/ExpressError")
@@ -12,7 +12,7 @@ const AdminRoutes = require("./routes/Admin")
 const flash = require("connect-flash")
 const session = require("express-session")
 const UserRoutes = require("./routes/user")
-// require("./auth")
+require("./auth")
 const cookieParser = require('cookie-parser');
 const passport = require("passport")
 const post = require("./module/post")
@@ -47,7 +47,7 @@ app.use(flash())
 app.use(session(sessionOption))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-const db_url = process.env.DATABASE_URL
+const db_url = process.env.MONGO_URL
 app.use(cookieParser("This is the admin"));
 
 app.use(passport.initialize());
