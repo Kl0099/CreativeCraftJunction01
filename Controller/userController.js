@@ -7,6 +7,7 @@ const axios = require("axios")
 const otpGenerator = require("otp-generator")
 const OtpSchema = require("../module/otp")
 const dotenv = require("dotenv")
+const passport = require("passport")
 
 
 dotenv.config()
@@ -90,13 +91,8 @@ module.exports.verfiySignUp = wrapAsync(async (req, res, next) => {
 //sending otp to user
 module.exports.login = wrapAsync(async (req, res, next) => {
     const { Number } = req.body
+    //getting user
     const userExistInDb = await User.find({ ContactNumber: Number })
-    //checking user is signUp or in db or not
-    if (userExistInDb.length === 0) {
-        req.flash("LoginError", "User Not Found! SignUp First")
-        res.redirect("/user/signUp")
-        next()
-    }
 
     const OTP = otpGenerator.generate(4, {
         digits: true, lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false
@@ -123,22 +119,10 @@ module.exports.LoginVerification = wrapAsync(async (req, res, next) => {
     }
 
     const rightOtpFind = otpHolder[otpHolder.length - 1]
-    const validUser = await bcrypt.compare(NumberOtp, rightOtpFind.otp)
-    console.log(rightOtpFind.number , ContactNumber.toString(), NumberOtp, rightOtpFind.otp)
-    
-    if (rightOtpFind.number === ContactNumber.toString() && validUser) {
+    if (rightOtpFind.number == ContactNumber && NumberOtp == rightOtpFind.otp) {
         const user = await User.find({ ContactNumber: ContactNumber })
-        console.log(user)
-        // Passport's login function to serialize the user
-        req.login(user, async (err) => {
-            if (err) {
-                return next(err);
-            }
-            // Deleting OTP after successful login
-            const OTPDelete = await OtpSchema.deleteMany({ number: rightOtpFind.number });
-            // Redirect or send a response as needed
-            res.redirect('/');
-        });
+        res.redirect("/")
+        console.log(req.user)
     } else {
         req.flash("LoginError", "INVALID OTP")
         res.redirect("/user/otp")

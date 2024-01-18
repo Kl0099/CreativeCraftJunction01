@@ -61,7 +61,11 @@ router.get("/otp", wrapAsync(async (req, res, next) => {
 }))
 
 //login OTP verification
-router.post("/login", AdCheck, login)
+router.post("/login",
+    AdCheck,
+    passport.authenticate("local", { failureFlash: true, failureRedirect: "/user/login" }),
+    login
+)
 
 //login OTP verification
 router.post("/login/Verfication", LoginVerification)
