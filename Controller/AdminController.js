@@ -46,12 +46,19 @@ module.exports.AdminLoginVerficaiton = wrapAsync(async (req, res, next) => {
         next()
         //deleting otp after user registor
         const OTPDelete = await OtpSchema.deleteMany({ number: rightOtpFind.number })
-        // req.flash("success", "Welcome Admin")
-        // res.redirect("/Admin")
-
     } else {
         req.flash("error", "You Entered Wrong OTP")
         res.redirect("/")
     }
 })
 
+//Checking Admin
+module.exports.AdminIsAuthencitated = wrapAsync(async (req, res, next) => {
+    if (!req.isAuthenticated()) {
+        req.flash("error", "You are not Admin")
+        res.redirect("/")
+    } else {
+        console.log(req.user)
+        next()
+    }
+})
