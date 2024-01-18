@@ -9,7 +9,6 @@ const OtpSchema = require("../module/otp")
 const dotenv = require("dotenv")
 const passport = require("passport")
 
-
 dotenv.config()
 const authToken = process.env.Twilio_authToken
 const accountSid = process.env.Twilio_accoundSid

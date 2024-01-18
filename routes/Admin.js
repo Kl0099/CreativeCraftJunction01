@@ -8,7 +8,7 @@ const { categorySchema } = require("../Schema")
 const post = require("../module/post")
 const category = require("../module/category")
 const Admin = require("../module/Admin")
-const { AdminLoginVerficaiton, AdminLogin } = require("../Controller/AdminController")
+const { AdminLoginVerficaiton, AdminLogin, AdminIsAuthencitated } = require("../Controller/AdminController")
 const fs = require("fs")
 const { AddProduct, AddCategory, editCategory, editProduct } = require("../Controller/ProductController")
 const passport = require("passport")
@@ -27,6 +27,9 @@ passport.use("Admin-local", new LocalStrategy(
         }
     }
 ))
+
+//Storing Admin Checking in variable
+// const AdminCheck = AdminIsAuthencitated()
 
 // multer middleware to storge the db in upload folder
 const storage = multer.diskStorage({
@@ -70,14 +73,14 @@ const CategorySchemaValidation = (req, res, next) => {
 }
 
 //Admin route
-router.get("/", wrapAsync(async (req, res, next) => {
+router.get("/", wrapAsync(async (req, res) => {
     res.render("Admin/Admin.ejs")
 }))
 
 // Add Category (get form route)
-router.get("/Category", (req, res, next) => {
+router.get("/Category", wrapAsync(async (req, res) => {
     res.render("Admin/AddCategory")
-})
+}))
 
 // Add Category (Post route)
 router.post("/Category",
@@ -87,20 +90,23 @@ router.post("/Category",
 )
 
 //category view route
-router.get('/ViewCategory', async (req, res) => {
+router.get('/ViewCategory', wrapAsync(async (req, res) => {
     const AllCategorys = await category.find({})
     res.render("Admin/showCategory.ejs", { AllCategorys })
-})
+}))
 
 //Cateogory Edit
-router.get('/Category/Edit/:id', async (req, res) => {
+router.get('/Category/Edit/:id', wrapAsync(async (req, res) => {
     const { id } = req.params
     const Categorys = await category.find({ categoryId: id })
     res.render("Admin/EditCategory.ejs", { Categorys })
-})
+}))
 
 //Category Edit post
-router.post("/Category/Edit/:id", CategorySchemaValidation, editCategory)
+router.post("/Category/Edit/:id",
+    CategorySchemaValidation,
+    editCategory
+)
 
 //Delete Category 
 router.get("/Category/Delete/:id", wrapAsync(async (req, res) => {
@@ -111,7 +117,7 @@ router.get("/Category/Delete/:id", wrapAsync(async (req, res) => {
 }))
 
 // Add Product (get form route)
-router.get("/Product", wrapAsync(async (req, res, next) => {
+router.get("/Product", wrapAsync(async (req, res) => {
     res.render('Admin/Addproduct.ejs')
 }))
 
@@ -123,17 +129,17 @@ router.post("/Product",
 )
 
 //Product view route
-router.get('/ViewProduct', async (req, res) => {
+router.get('/ViewProduct', wrapAsync(async (req, res) => {
     const AllProducts = await post.find({})
     res.render("Admin/showProduct.ejs", { AllProducts })
-})
+}))
 
 // Product Edit
-router.get('/Product/Edit/:id', async (req, res) => {
+router.get('/Product/Edit/:id', wrapAsync(async (req, res) => {
     const { id } = req.params
     const Products = await post.find({ productId: id })
     res.render("Admin/EditProduct.ejs", { Products })
-})
+}))
 
 router.post("/Product/Edit/:id",
     upload.fields([
@@ -170,7 +176,7 @@ router.get("/logout", wrapAsync(async (req, res) => {
     res.redirect("/")
 }))
 
-router.all("*", wrapAsync(async (req, res, next) => {
+router.all("*", wrapAsync(async (req, res) => {
     throw new ExpressError(404, "Page not found!")
 }))
 
