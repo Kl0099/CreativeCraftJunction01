@@ -11,6 +11,22 @@ const Admin = require("../module/Admin")
 const { AdminLoginVerficaiton, AdminLogin } = require("../Controller/AdminController")
 const fs = require("fs")
 const { AddProduct, AddCategory, editCategory, editProduct } = require("../Controller/ProductController")
+const passport = require("passport")
+const LocalStrategy = require("passport-local").Strategy
+
+//Admin Authentication
+passport.use("Admin-local", new LocalStrategy(
+    { usernameField: "Number", passwordField: "Number", passReqToCallback: true },
+    async (req, username, password, done) => {
+        const user = await Admin.findOne({ ContactNumber: username })
+        if (!user) {
+            req.flash("You are not Admin!")
+            return done(null, false)
+        } else {
+            return done(null, user)
+        }
+    }
+))
 
 // multer middleware to storge the db in upload folder
 const storage = multer.diskStorage({
@@ -140,7 +156,14 @@ router.get("/Product/Delete/:id", wrapAsync(async (req, res) => {
 router.get("/login", AdminLogin)
 
 //Verifing Admin OTP
-router.post("/Login/Verificaiton", AdminLoginVerficaiton)
+router.post("/Login/Verificaiton",
+    AdminLoginVerficaiton,
+    passport.authenticate("Admin-local", { failureFlash: true, failureRedirect: "/user/login" }),
+    function (req, res) {
+        req.flash("success", "Welcome Admin")
+        res.redirect("/Admin")
+    }
+)
 
 //Admin Logout route
 router.get("/logout", wrapAsync(async (req, res) => {

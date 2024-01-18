@@ -1,5 +1,5 @@
 <% if(success.length !==0){ %>
-    <span style="display: flex; justify-content: center;">
+    <span class="Flash-span">
     <div class="alert col-md-4 alert-success alert-dismissible fade show" role="alert">
         <%= success %>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -8,7 +8,7 @@
     <% } %>
 
         <% if(error.length !==0){ %>
-            <span style="display: flex; justify-content: center;">
+            <span class="Flash-span">
                 <div class="alert alert-danger alert-dismissible fade show col-md-4" role="alert">
                     <%= error %>
                     <button type="button" class="btn-close " data-bs-dismiss="alert" aria-label="Close"></button>

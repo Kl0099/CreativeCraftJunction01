@@ -4,7 +4,8 @@
     z-index: 999;
     width: 100vw;
 }
-.navbar-nav{
+
+.navbar-nav {
     padding-right: 6vw;
 }
 
@@ -66,11 +67,11 @@
     transition: all ease 1s;
 }
 
-i{
+i {
     color: black;
 }
 
-.nav-link:hover::after {
+:is(.nav-link:hover, .nav-link:focus)::after {
     width: 100%;
 }
 

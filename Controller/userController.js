@@ -120,9 +120,9 @@ module.exports.LoginVerification = wrapAsync(async (req, res, next) => {
 
     const rightOtpFind = otpHolder[otpHolder.length - 1]
     if (rightOtpFind.number == ContactNumber && NumberOtp == rightOtpFind.otp) {
-        const user = await User.find({ ContactNumber: ContactNumber })
-        res.redirect("/")
-        console.log(req.user)
+        // const user = await User.find({ ContactNumber: ContactNumber })
+        req.body = { Number: ContactNumber }
+        next()
     } else {
         req.flash("LoginError", "INVALID OTP")
         res.redirect("/user/otp")
