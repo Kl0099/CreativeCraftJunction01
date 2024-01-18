@@ -12,12 +12,11 @@ passport.use(new GoogleStrategy({
   callbackURL: "http://localhost:5500/user/auth/google/callback",
   passReqToCallback: true
 },
-  async function (req, accessToken, refreshToken, profile, done ) {
+  async function (req, accessToken, refreshToken, profile, done) {
     console.log(req.cookie)
     try {
       // Find or create user based on Google profile information
       const existingUser = await User.findOne({ email: profile.emails[0].value })
-
       if (existingUser) {
         return done(null, existingUser);
       }
