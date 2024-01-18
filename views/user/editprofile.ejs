@@ -1,0 +1,154 @@
+<!-- <div class="container-fluid custom-container">
+  <div class="row">edit your profile</div>
+  <div>
+    <form action="post">
+      <label for="name">name</label>
+      <input
+        type="text"
+        name="name"
+        id="name"
+      />
+      <label for="name">email</label>
+      <input
+        type="email"
+        name="email"
+        id="email"
+      />
+      <label for="number">number</label>
+      <input
+        type="number"
+        name="number"
+        id="number"
+      />
+      <label for="password">password</label>
+      <input
+        type="password"
+        name="password"
+        id="password"
+      />
+    </form>
+  </div>
+</div> -->
+
+<% layout("/layouts/boilerplate.ejs") %>
+<div
+  class="row"
+  id="login"
+>
+  <div
+    class="col-4"
+    id="loginDiv"
+  >
+    <span class="borderspan">
+      <img
+        src="/image/symbol.png"
+        alt="logo.png"
+        height="50vh"
+        class="rounded-circle mb-3"
+      />
+      <h5 class="title">Edit your profile</h5>
+      <hr />
+      <form
+        method="post"
+        class="needs-validation"
+        novalidate
+      >
+        <span style="color: red; font-weight: 700">
+          <%if(SignUpError.length!==0){ %> <%= SignUpError %> <% }%>
+        </span>
+        <div class="mb-3 form-floating">
+          <input
+            required
+            type="name"
+            class="form-control"
+            name="user[name]"
+            id="name"
+            value="user[name]"
+          />
+          <label
+            for="email"
+            class="form-label pl-1"
+            >Name</label
+          >
+          <div class="valid-feedback">Looks good!</div>
+          <div class="invalid-feedback">name is required</div>
+        </div>
+
+        <div
+          class="mb-3 form-floating"
+          id="number"
+        >
+          <input
+            required
+            type="number"
+            minlength="10"
+            class="form-control"
+            name="user[number]"
+            id="number"
+            value="user[number]"
+          />
+          <label
+            for="number"
+            class="form-label pl-1 inputTag"
+            >Number</label
+          >
+          <div class="valid-feedback">Looks good!</div>
+          <div class="invalid-feedback">Number is Invalid</div>
+        </div>
+
+        <div class="mb-3 form-floating">
+          <input
+            required
+            type="email"
+            class="form-control"
+            name="user[email]"
+            id="user[email]"
+            value="user@example.com"
+          />
+          <label
+            for="email"
+            class="form-label pl-1"
+          >
+            Email</label
+          >
+          <div class="valid-feedback">Looks good!</div>
+          <div class="invalid-feedback">Email is invalid</div>
+        </div>
+        <div class="mb-3 form-floating">
+          <input
+            required
+            type="password"
+            class="form-control"
+            name="user[password]"
+            id="password"
+            value="user[password]"
+          />
+          <label
+            for="password"
+            class="form-label pl-1"
+            >old password</label
+          >
+          <div class="valid-feedback">Looks good!</div>
+          <div class="invalid-feedback">password is invalid</div>
+        </div>
+        <div class="mb-3 form-floating">
+          <input
+            required
+            type="password"
+            class="form-control"
+            name="user[password]"
+            id="password"
+          />
+          <label
+            for="password"
+            class="form-label pl-1"
+            >New password</label
+          >
+          <div class="valid-feedback">Looks good!</div>
+          <div class="invalid-feedback">password is invalid</div>
+        </div>
+        <button class="btn btn-outline-warning">edit</button>
+      </form>
+    </span>
+  </div>
+</div>

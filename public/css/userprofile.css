@@ -1,0 +1,29 @@
+.custom-card {
+  min-width: 320px !important	;
+  display: flex !important;
+  /* flex-direction: column; */
+  align-items: flex-start !important;
+  justify-content: center !important;
+  min-height: 130px !important;
+}
+.custom-sub-card {
+  display: flex !important;
+  justify-content: space-around !important;
+  align-items: flex-start !important;
+  gap: 20px !important;
+}
+.custom-img {
+  width: 100px !important;
+  height: 100px !important;
+}
+.custom-div {
+  border: 1px solid black !important;
+  display: flex !important;
+  flex-direction: column !important;
+  flex-wrap: wrap;
+  gap: 20px !important;
+}
+.custom-container {
+  background-color: beige !important;
+  height: 100%;
+}

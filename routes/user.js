@@ -90,5 +90,14 @@ router.get('/auth/google/callback',
         res.redirect("/")
     }
 );
+//user Profile
+router.get("/userProfile", AdCheck, (req, res) => {
+    res.render("user/userProfile.ejs")
+  })
+  //editprofile page
+  router.get("/userProfile/edit", (req, res) => {
+    res.render("user/editprofile.ejs")
+  })
+  
 
 module.exports = router
