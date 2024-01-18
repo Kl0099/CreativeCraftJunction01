@@ -1,0 +1,8 @@
+.Flash-span {
+    display: flex;
+    justify-content: end;
+    position: fixed;
+    width: 100%;
+    z-index: 99;
+    bottom: 0;
+  }

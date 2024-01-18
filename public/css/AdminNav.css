@@ -6,7 +6,7 @@
     top: 0;
 }
 
-a{
+a {
     color: white !important;
     font-weight: 700 !important;
     position: relative;
@@ -24,6 +24,6 @@ a{
     border-radius: 10%;
 }
 
-.nav-link:hover::after {
+:is(.nav-link:hover, .nav-link:focus)::after {
     width: 100%;
 }

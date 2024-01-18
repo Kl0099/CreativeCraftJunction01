@@ -10,12 +10,8 @@ const Admin = require("../module/Admin")
 
 //verification for otp
 module.exports.AdminLogin = wrapAsync(async (req, res, next) => {
-    const AdminDetails = req.signedCookies
-    if (AdminDetails["Admin"].length === 0) {
-        req.flash("error", "Please Admin login again")
-        res.redirect('/')
-    }
-    const Number = AdminDetails["Admin"]
+    const AdminDetails = req.session.Admin["ContactNumber"]
+    const Number = AdminDetails
     const admin = await Admin.find({ ContactNumber: Number })
 
     const OTP = otpGenerator.generate(4, {
@@ -46,23 +42,23 @@ module.exports.AdminLoginVerficaiton = wrapAsync(async (req, res, next) => {
     const rightOtpFind = otpHolder[otpHolder.length - 1]
     if (rightOtpFind.number === ContactNumber && NumberOtp === rightOtpFind.otp) {
         const admin = await Admin.find({ ContactNumber: ContactNumber })
-        const token = admin[0].generateJWT()
-        await token.then((tokenValue) => {
-            //storing token in cookie storage
-            res.cookie("jwtAdmin", `${tokenValue}`, {
-                httpOnly: true,
-                expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
-                maxAge: 7 * 24 * 60 * 60 * 1000
-            })
-        })
+        req.body = { Number: ContactNumber }
+        next()
         //deleting otp after user registor
         const OTPDelete = await OtpSchema.deleteMany({ number: rightOtpFind.number })
-        const ClearAdminCookie = await res.clearCookie("Admin")
-        req.flash("success" , "Welcome Admin")
-        res.redirect("/Admin")
     } else {
         req.flash("error", "You Entered Wrong OTP")
         res.redirect("/")
     }
 })
 
+//Checking Admin
+module.exports.AdminIsAuthencitated = wrapAsync(async (req, res, next) => {
+    if (!req.isAuthenticated()) {
+        req.flash("error", "You are not Admin")
+        res.redirect("/")
+    } else {
+        console.log(req.user)
+        next()
+    }
+})

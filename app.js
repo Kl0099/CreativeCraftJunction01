@@ -1,6 +1,6 @@
 const express = require("express")
 const app = express()
-const PORT = process.env.PORT ||5500
+const PORT = process.env.PORT || 5500
 const path = require("path")
 const ejsMate = require("ejs-mate")
 const ExpressError = require("./utility/ExpressError")
@@ -19,7 +19,8 @@ const post = require("./module/post")
 const category = require("./module/category")
 const User = require("./module/user")
 const Admin = require("./module/Admin")
-const LocalStrategy = require("passport-local")
+const LocalStrategy = require("passport-local").Strategy;
+const { user } = require("./Schema")
 require("./auth")
 
 const sessionOption = {
@@ -52,19 +53,25 @@ app.use(cookieParser("This is the admin"));
 
 app.use(passport.initialize());
 app.use(passport.session());
-passport.use(new LocalStrategy(User.authenticate()))
-passport.serializeUser((user, done) => {
-    done(null, user.id);
-});
 
-passport.deserializeUser(async (id, done) => {
-    try {
-        const user = await User.findById(id);
-        done(null, user);
-    } catch (err) {
-        done(err, null);
-    }
-});
+passport.use(
+    "local",
+    new LocalStrategy(
+        { usernameField: 'Number', passwordField: "Number", passReqToCallback: true },
+        async (req, username, password, done) => {
+            const user = await User.findOne({ ContactNumber: username })
+            if (!user) {
+                req.flash("LoginError", "User Not Found! SignUp First")
+                return done(null, false);
+            } else {
+                return done(null, user);
+            }
+        }
+    )
+);
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 main()
     .then(res => console.log("Mongodb is connected"))

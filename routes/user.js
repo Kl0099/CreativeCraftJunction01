@@ -26,13 +26,8 @@ const AdCheck = async (req, res, next) => {
         next()
     } else {
         const ContactNumber = admin[0].ContactNumber
+        req.session.Admin = { ContactNumber }
         req.flash("success", "Welcome Abmin Enter the OTP")
-        res.cookie("Admin", `${ContactNumber}`, {
-            httpOnly: true,
-            expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
-            maxAge: 7 * 24 * 60 * 60 * 1000,
-            signed: true
-        })
         res.redirect("/Admin/login")
     }
 }
@@ -64,7 +59,14 @@ router.get("/otp", wrapAsync(async (req, res, next) => {
 router.post("/login", AdCheck, login)
 
 //login OTP verification
-router.post("/login/Verfication", LoginVerification)
+router.post("/login/Verfication",
+    LoginVerification,
+    passport.authenticate("local", { failureFlash: true, failureRedirect: "/user/login" }),
+    wrapAsync(async (req, res) => {
+        req.flash("success", "Welcome to CreativeCraftJunction")
+        res.redirect("/")
+    })
+)
 
 //logout api
 router.get("/logOut", (req, res, next) => {
